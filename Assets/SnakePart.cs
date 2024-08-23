@@ -30,7 +30,7 @@ public class SnakePart : MonoBehaviour
             attached = true;
             snake.AttachPart(this);
         }
-        Debug.Log(attachAt);
+        //Debug.Log(attachAt);
     }
 
     public void MovePart(Vector3 posIn, float rotation)

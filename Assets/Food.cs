@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
+
+    public FoodSpawner spawner;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,7 @@ public class Food : MonoBehaviour
     {
         collision.GetComponent<Snake>().AddPart();
         //Debug.Log("COLLISIION");
+        spawner.RemoveFood(this);
         Destroy(gameObject);
     }
 }

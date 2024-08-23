@@ -117,12 +117,12 @@ public class Snake : MonoBehaviour
     {
         if (Mathf.Abs(moveIn - prevMoveDir)  >= 2)
         {
-            Debug.Log("Move Allowed");
+            //Debug.Log("Move Allowed");
             return moveIn;
         }
         else
         {
-            Debug.Log("Tried to turn directly" );
+            //Debug.Log("Tried to turn directly" );
             return prevMoveDir;
         }    
     }
@@ -135,14 +135,14 @@ public class Snake : MonoBehaviour
 
     public void AttachPart(SnakePart partIn)
     {
-        Debug.Log("Attaching Part");
+        //Debug.Log("Attaching Part");
         parts.Insert(0,partIn);
         looseParts.Remove(partIn);
     }
 
     void SpawnPart()
     {
-        Debug.Log("Adding Part");
+        //Debug.Log("Adding Part");
         SnakePart tempPart = Instantiate(snakePart,moves[1],transform.rotation);
         looseParts.Add(tempPart);
         tempPart.SetStartStuff(startParts, this);
