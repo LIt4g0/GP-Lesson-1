@@ -5,37 +5,42 @@ using UnityEngine.SceneManagement;
 
 //Object.DontDestroyOnLoad test;
 
-[DisallowMultipleComponent]
+//[DisallowMultipleComponent]
 public class GameManager : MonoBehaviour
 {
+    // private static GameManager m_Instance = null;
+    // public static GameManager Instance
+    // {
+    //     get
+    //     {
+    //         if (m_Instance == null)
+    //         {
+    //             m_Instance = FindObjectOfType<GameManager>();
+    //             // fallback, might not be necessary.
+    //             if (m_Instance == null)
+    //                 m_Instance = new GameObject(typeof(GameManager).Name).AddComponent<GameManager>();
+    //             DontDestroyOnLoad(m_Instance);
+    //         }
+    //         return m_Instance;
+    //     }
+    // }
 
-    [SerializeField] bool deadlyWalls = true;
+    [SerializeField] bool deadlyWalls;
     [SerializeField] Canvas menu;
     bool inMenu = true;
+    Snake snake;
 
-    private static GameManager _instance;
-    public static GameManager Instance {
-        get { return _instance; }
-        set {
-            if (_instance == null) {
-                _instance = value;
-            } else {
-                Debug.Log("Destroying extra GameManager" + value.gameObject);
-                Destroy(value.gameObject);
-            }
-        }
-    }
 
     void Awake()
     {
-        Instance = this;
+        //Instance = this;
         DontDestroyOnLoad(gameObject);
     }
     void Start()
     {
          if (SceneManager.GetActiveScene().name == "Snake")
          {
-            ShowMenu(false);
+            //ShowMenu(false);
          }
          else
          {
@@ -78,11 +83,19 @@ public class GameManager : MonoBehaviour
     {
         ShowMenu(false);
         SceneManager.LoadScene("Snake");
+        //snake = FindAnyObjectByType<Snake>();
+        //Debug.Log(snake);
 
     }
     public void Quit()
     {
         Application.Quit();
         
+    }
+
+    public bool SetSnake(Snake snakeIn)
+    {
+        snake = snakeIn;
+        return deadlyWalls;
     }
 }

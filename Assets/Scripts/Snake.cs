@@ -24,6 +24,7 @@ public class Snake : MonoBehaviour
     [SerializeField] float speedMultiplier = 2.0f;
     [SerializeField] GameManager gameManager;
     public int score = 0;
+    bool deadlyWalls = true;
 
     void Start()
     {
@@ -31,6 +32,9 @@ public class Snake : MonoBehaviour
         rotations.Add(0);
         moveDir = 4;
         prevMoveDir = moveDir;
+        gameManager = FindObjectOfType<GameManager>();
+        deadlyWalls = gameManager.SetSnake(this);
+        
     }
 
     void Update()
@@ -115,14 +119,15 @@ public class Snake : MonoBehaviour
             float sizeX = 16;
             float sizeZ = 8;
             Vector3 tempMove = moveVector + moves[0];
-            if (tempMove.x > sizeX || tempMove.x < -sizeX)
+            
+            if ((tempMove.x > sizeX || tempMove.x < -sizeX) && !deadlyWalls)
             {
                 //Debug.Log("colliding X");
                 tempMove = moves[0];
                 tempMove.x *= -1;
             }
 
-            if (tempMove.z > sizeZ || tempMove.z < -sizeZ)
+            if ((tempMove.z > sizeZ || tempMove.z < -sizeZ) && !deadlyWalls)
             {
                 //Debug.Log("colliding Z");
                 tempMove = moves[0];
