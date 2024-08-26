@@ -315,6 +315,8 @@ MonoBehaviour:
   prevMoveDir: 0
   snakePart: {fileID: 297221365875686920, guid: 03de5a46eea610b4699e228611b43bd3, type: 3}
   startParts: 0
+  text: {fileID: 0}
+  score: 0
 --- !u!65 &5028731913350520292
 BoxCollider:
   m_ObjectHideFlags: 0

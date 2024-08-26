@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +20,10 @@ public class Snake : MonoBehaviour
     float rotation = 0.0f;
     float timeToMove = 0.0f;
     [SerializeField] int startParts = 1;
+    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] float speedMultiplier = 2.0f;
+    [SerializeField] GameManager gameManager;
+    public int score = 0;
 
     void Start()
     {
@@ -29,7 +35,8 @@ public class Snake : MonoBehaviour
 
     void Update()
     {
-
+        text.text = ""+score;
+        
         if (Input.GetKeyDown(KeyCode.W))   
         {
             moveDir = TryMoveDir(1);
@@ -47,8 +54,15 @@ public class Snake : MonoBehaviour
             moveDir = TryMoveDir(5);
         } 
 
-
-        timeToMove += Time.deltaTime;
+        if (Input.GetKey(KeyCode.Space))
+        {
+            timeToMove += Time.deltaTime*speedMultiplier;
+        }
+        else
+        {
+            timeToMove += Time.deltaTime;
+        }
+        
         if (timeToMove >= moveTime)
         {
             Vector3 moveVector = new Vector3(0,0,0);
@@ -98,19 +112,32 @@ public class Snake : MonoBehaviour
                 attached.MovePart(moves[i],rotations[i]);
                 i += 1;
             }
+            float sizeX = 16;
+            float sizeZ = 8;
+            Vector3 tempMove = moveVector + moves[0];
+            if (tempMove.x > sizeX || tempMove.x < -sizeX)
+            {
+                //Debug.Log("colliding X");
+                tempMove = moves[0];
+                tempMove.x *= -1;
+            }
 
-            moves.Insert(0, moveVector + moves[0]);
+            if (tempMove.z > sizeZ || tempMove.z < -sizeZ)
+            {
+                //Debug.Log("colliding Z");
+                tempMove = moves[0];
+                tempMove.z *= -1;
+            }
+
+            moves.Insert(0, tempMove);
             rotations.Insert(0, rotation);
             transform.position = moves[0];
             transform.localRotation = Quaternion.Euler(0,rotations[0],0);
             
-            //Move parts
 
             timeToMove = 0.0f;
             prevMoveDir = moveDir;
-            //moveDir = 0;
         }
-        //Debug.Log(moves[0]);
     }
 
     private int TryMoveDir(int moveIn)
@@ -131,6 +158,7 @@ public class Snake : MonoBehaviour
     {
         Invoke("SpawnPart", moveTime);
         transform.localScale = new Vector3(1.35f,1.35f,1.35f);
+        score += 1;
     }
 
     public void AttachPart(SnakePart partIn)
@@ -148,7 +176,6 @@ public class Snake : MonoBehaviour
         tempPart.SetStartStuff(startParts, this);
         startParts += 1;
         transform.localScale = new Vector3(1f,1f,1f);
-        //tempPart.snake = this;
     }
 
     void OnTriggerEnter(Collider collision)
@@ -156,7 +183,13 @@ public class Snake : MonoBehaviour
         if (!collision.CompareTag("Food"))
         {
             Debug.Log("DIE");
-            SceneManager.LoadScene("Menu");
+            gameManager.AddScore(score);
         }
     }
+
+    public Transform GetSnakePos()
+    {
+        return transform;
+    }
+    
 }

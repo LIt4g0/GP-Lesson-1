@@ -1,6 +1,7 @@
 //using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class FoodSpawner : MonoBehaviour
     [SerializeField] float width = 10.0f;
     [SerializeField] float heigth = 10.0f;
     [SerializeField] int maxFood = 3;
+    [SerializeField] Snake snake;
     
     float timeToSpawn = 0.0f;
     // Start is called before the first frame update
@@ -24,7 +26,13 @@ public class FoodSpawner : MonoBehaviour
     void Update()
     {
 
-        timeToSpawn -= Time.deltaTime;
+
+        if (foods.Count <= maxFood)
+        {
+            timeToSpawn -= Time.deltaTime;
+        }
+
+
         if (foods.Count <= maxFood && timeToSpawn <= 0)
         {
             timeToSpawn = spawnTimer;
@@ -36,7 +44,14 @@ public class FoodSpawner : MonoBehaviour
     {
         //int iWidth = Random.Range(-width,width);
         Vector3 position = new Vector3((int)Random.Range(-width,width),0,(int)Random.Range(-heigth,heigth));
+        if (Vector3.Distance(position, snake.GetSnakePos().position) < 1.0f)
+        {
+            Debug.Log("Tried to spawn in snakehead");
+            return;
+        }
+
         var foody = Instantiate(food,position, transform.rotation);
+        foods.Add(foody);
         foody.spawner = this;
     }
 
