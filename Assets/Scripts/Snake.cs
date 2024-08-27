@@ -32,9 +32,8 @@ public class Snake : MonoBehaviour
         rotations.Add(0);
         moveDir = 4;
         prevMoveDir = moveDir;
-        gameManager = FindObjectOfType<GameManager>();
-        deadlyWalls = gameManager.SetSnake(this);
-        
+        gameManager = GameManager.manager;
+        deadlyWalls = gameManager.SetSnake(this);       
     }
 
     void Update()

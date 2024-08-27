@@ -3,54 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//Object.DontDestroyOnLoad test;
 
-//[DisallowMultipleComponent]
 public class GameManager : MonoBehaviour
 {
-    // private static GameManager m_Instance = null;
-    // public static GameManager Instance
-    // {
-    //     get
-    //     {
-    //         if (m_Instance == null)
-    //         {
-    //             m_Instance = FindObjectOfType<GameManager>();
-    //             // fallback, might not be necessary.
-    //             if (m_Instance == null)
-    //                 m_Instance = new GameObject(typeof(GameManager).Name).AddComponent<GameManager>();
-    //             DontDestroyOnLoad(m_Instance);
-    //         }
-    //         return m_Instance;
-    //     }
-    // }
+    public static GameManager manager;
 
-    [SerializeField] bool deadlyWalls;
+    [SerializeField] bool deadlyWalls = true;
     [SerializeField] Canvas menu;
     bool inMenu = true;
     Snake snake;
-
+    [SerializeField] float totalScore;
 
     void Awake()
     {
-        //Instance = this;
-        DontDestroyOnLoad(gameObject);
+        if (manager == null)
+        {
+            manager = this;
+            DontDestroyOnLoad(this);
+        }
+        else if (manager != this)
+        {
+            Debug.Log("DESTROYING EXTRA MANAGER: " + gameObject.name);
+            Destroy(gameObject);
+        }
     }
+
     void Start()
     {
          if (SceneManager.GetActiveScene().name == "Snake")
          {
-            //ShowMenu(false);
+            ShowMenu(false);
          }
          else
          {
             ShowMenu(true);
          }
-    }
-
-    void Update()
-    {
-        
     }
 
     void ShowMenu(bool showIn)
@@ -68,10 +55,10 @@ public class GameManager : MonoBehaviour
 
     public void AddScore(int scoreIn)
     {
-        Debug.Log("Add scores to list "+ scoreIn);
+        Debug.Log("Added, total is: "+ totalScore);
+        totalScore += scoreIn;
         SceneManager.LoadScene("Menu");
         ShowMenu(true);
-
     }
 
     public void SetWalls()
@@ -83,14 +70,10 @@ public class GameManager : MonoBehaviour
     {
         ShowMenu(false);
         SceneManager.LoadScene("Snake");
-        //snake = FindAnyObjectByType<Snake>();
-        //Debug.Log(snake);
-
     }
     public void Quit()
     {
         Application.Quit();
-        
     }
 
     public bool SetSnake(Snake snakeIn)
