@@ -1087,6 +1087,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deadlyWalls: 1
   menu: {fileID: 5997164080299112020}
+  totalScore: 0
+  scoreText: {fileID: 6042311107175182626}
+  scores: 
 --- !u!1 &6174091521592305269
 GameObject:
   m_ObjectHideFlags: 0
