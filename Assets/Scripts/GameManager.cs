@@ -45,7 +45,28 @@ public class GameManager : MonoBehaviour
             ShowMenu(true);
          }
 
-         AddScore(PlayerPrefs.GetInt("SavedHighScore1"));
+         LoadScores();
+    }
+
+    private void LoadScores()
+    {
+        for (int i = 0; i <= 10; i++)
+        {
+            //int tempScore = ;
+            if (PlayerPrefs.HasKey("SavedHighScore"+(char)i))
+            {
+                
+                scores.Insert(i,PlayerPrefs.GetInt("SavedHighScore"+(char)i));
+            }
+            else
+            {
+                //PlayerPrefs.SetInt("SavedHighScore"+i, scores[0]);
+            }
+        }
+        Debug.Log(scores[0]);
+        SortAndRefreshScores();
+
+
     }
 
     void ShowMenu(bool showIn)
@@ -85,26 +106,13 @@ public class GameManager : MonoBehaviour
         foreach (var score in scores)
         {
             scoreString += i+1 + ". " + scores[i] + "\n";
+            PlayerPrefs.SetInt("SavedHighScore"+(char)i,scores[i]);
             i ++;
             //if (i >= 10) break;
         }
 
 
-        if (PlayerPrefs.HasKey("SavedHighScore1"))
-        {
-            if (PlayerPrefs.GetInt("SavedHighScore1") > scores[0])
-            {
-                
-            }
-            else
-            {
-                PlayerPrefs.SetInt("SavedHighScore1", scores[0]);
-            }
-        }
-        else
-        {
-            PlayerPrefs.SetInt("SavedHighScore1", scores[0]);
-        }
+
 
 
         //Debug.Log(PlayerPrefs.GetInt("SavedHighScore1"));
