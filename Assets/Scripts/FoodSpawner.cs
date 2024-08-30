@@ -19,6 +19,8 @@ public class FoodSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        width = snake.mapSizeX+1;
+        heigth = snake.mapSizeZ+1;
         SpawnFood();
     }
 

@@ -208,7 +208,7 @@ Transform:
   m_GameObject: {fileID: 11614401}
   serializedVersion: 2
   m_LocalRotation: {x: 0.67559016, y: 0, z: 0, w: 0.7372774}
-  m_LocalPosition: {x: 0, y: 19.7, z: -1.6}
+  m_LocalPosition: {x: 0, y: 15.19, z: -1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -873,16 +873,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 809420720}
     - target: {fileID: 4463548606772377511, guid: 0db434c4df50288449fe09d12804f84d, type: 3}
-      propertyPath: moveTime
-      value: 0.2
+      propertyPath: mapSizeX
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4463548606772377511, guid: 0db434c4df50288449fe09d12804f84d, type: 3}
-      propertyPath: startParts
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4463548606772377511, guid: 0db434c4df50288449fe09d12804f84d, type: 3}
-      propertyPath: gameManager
-      value: 
+      propertyPath: mapSizeZ
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4463548606772377511, guid: 0db434c4df50288449fe09d12804f84d, type: 3}
       propertyPath: parts.Array.data[0]

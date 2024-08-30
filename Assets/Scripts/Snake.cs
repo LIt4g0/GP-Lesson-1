@@ -23,6 +23,8 @@ public class Snake : MonoBehaviour
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] float speedMultiplier = 2.0f;
     [SerializeField] GameManager gameManager;
+    public float mapSizeX = 16;
+    public float mapSizeZ = 8;
     public int score = 0;
     bool deadlyWalls = true;
 
@@ -115,8 +117,8 @@ public class Snake : MonoBehaviour
                 attached.MovePart(moves[i],rotations[i]);
                 i += 1;
             }
-            float sizeX = 16;
-            float sizeZ = 8;
+            float sizeX = mapSizeX;
+            float sizeZ = mapSizeZ;
             Vector3 tempMove = moveVector + moves[0];
             
             if ((tempMove.x > sizeX || tempMove.x < -sizeX) && !deadlyWalls)
