@@ -881,6 +881,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4463548606772377511, guid: 0db434c4df50288449fe09d12804f84d, type: 3}
+      propertyPath: moveTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4463548606772377511, guid: 0db434c4df50288449fe09d12804f84d, type: 3}
       propertyPath: parts.Array.data[0]
       value: 
       objectReference: {fileID: 4353269902109655798}
