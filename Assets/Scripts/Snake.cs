@@ -140,9 +140,17 @@ public class Snake : MonoBehaviour
             transform.position = moves[0];
             transform.localRotation = Quaternion.Euler(0,rotations[0],0);
             
-
             timeToMove = 0.0f;
             prevMoveDir = moveDir;
+
+            int partsTotal = looseParts.Count + parts.Count;
+            //Debug.Log(partsTotal);
+            if (moves.Count - partsTotal >= 10)
+            {
+                //Debug.Log("Clear list");
+                moves.RemoveAt(moves.Count-1);
+                rotations.RemoveAt(rotations.Count-1);
+            }
         }
     }
 

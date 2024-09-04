@@ -66,13 +66,12 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //Clear scores
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            // scores.RemoveAll(int);
-            // scoreNames.RemoveAll();
-            scoreClass.Clear();
-            PlayerPrefs.DeleteAll();
-        }
+        // if (Input.GetKeyDown(KeyCode.C))
+        // {
+
+        //     scoreClass.Clear();
+        //     PlayerPrefs.DeleteAll();
+        // }
 
         if (inputtingName)
         {
@@ -175,8 +174,26 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Menu");
         tempScore = scoreIn;
         tempScoreText.text = "Your Score: " + tempScore;
-        inputtingName = true;
-        //InputScoreName(scoreIn);
+        
+        //inputtingName = true;
+        if (scoreClass.Count > 9)
+        {
+            if (tempScore <= scoreClass[9].scoreValue)
+            {
+                inputtingName = false;
+                SetScores(0,"XXX");
+                //NameInputFinished();
+            }
+            else
+            {
+                inputtingName = true;
+            }
+        }
+        else
+        {
+            inputtingName = true;
+        }
+        //NameInputFinished();
 
     }
 
