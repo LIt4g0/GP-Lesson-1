@@ -40,7 +40,7 @@ public class Snake : MonoBehaviour
 
     void Update()
     {
-        text.text = ""+score;
+        
         
         if (Input.GetKeyDown(KeyCode.W))   
         {
@@ -173,6 +173,7 @@ public class Snake : MonoBehaviour
         Invoke("SpawnPart", moveTime);
         transform.localScale = new Vector3(1.35f,1.35f,1.35f);
         score += 1;
+        text.text = ""+score.ToString("0000");
     }
 
     public void AttachPart(SnakePart partIn)
