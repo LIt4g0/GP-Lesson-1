@@ -1,40 +1,34 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using OpenCover.Framework.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
-
 public class Score
-    {
-        public int scoreValue;
-        public string scoreName;
-    }
+{
+    public int scoreValue;
+    public string scoreName;
+}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager manager;
-    
-    [SerializeField] bool deadlyWalls = true;
+    [Header("Refrences")]
     [SerializeField] Canvas menu;
-    
     [SerializeField] Canvas input;
     [SerializeField] TMP_InputField inputField;
-    bool inMenu = true;
-    Snake snake;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI tempScoreText;
+    [SerializeField] bool deadlyWalls = true;
     [SerializeField] List<string> scoreNames = new List<string>();
     [SerializeField] List<int> scores = new List<int>();
     [SerializeField] List<Score> scoreClass = new List<Score>();
+
+    //Local vars
     bool inputtingName = false;
     int tempScore = 0;
+    bool inMenu = true;
 
     void Awake()
     {
@@ -65,14 +59,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        //Clear scores
-        // if (Input.GetKeyDown(KeyCode.C))
-        // {
-
-        //     scoreClass.Clear();
-        //     PlayerPrefs.DeleteAll();
-        // }
-
         if (inputtingName)
         {
             input.enabled = true;
@@ -111,6 +97,7 @@ public class GameManager : MonoBehaviour
             scoreValue = scoreIn,
             scoreName = nameIn
         };
+
         scoreClass.Add(newScore);
         Debug.Log("Added player "+ newScore.scoreName + " With score of: "+ newScore.scoreValue);
         scores.Add(scoreIn);
@@ -131,14 +118,17 @@ public class GameManager : MonoBehaviour
                 scoreClass.Insert(i,loadScore);
             }
         }
+
         SortAndRefreshScores();
     }
-    private void SortAndRefreshScores()
+
+    void SortAndRefreshScores()
     {
         string scoreString = "";
         int i = 0;
         scoreClass = scoreClass.OrderBy(c => c.scoreValue).ToList();
         scoreClass.Reverse();
+
         if (scoreClass.Count >= 10)
         {
             scoreClass.RemoveRange(10,scoreClass.Count-10);
@@ -175,14 +165,12 @@ public class GameManager : MonoBehaviour
         tempScore = scoreIn;
         tempScoreText.text = "Your Score: " + tempScore;
         
-        //inputtingName = true;
         if (scoreClass.Count > 9)
         {
             if (tempScore <= scoreClass[9].scoreValue)
             {
                 inputtingName = false;
                 SetScores(0,"XXX");
-                //NameInputFinished();
             }
             else
             {
@@ -193,15 +181,7 @@ public class GameManager : MonoBehaviour
         {
             inputtingName = true;
         }
-        //NameInputFinished();
-
     }
-
-    // private void InputScoreName(int scoreIn)
-    // {
-    //     SceneManager.LoadScene("InputNameScene");
-    // }
-
 
     public void SetWalls()
     {
@@ -213,16 +193,9 @@ public class GameManager : MonoBehaviour
         ShowMenu(false);
         SceneManager.LoadScene("Snake");
     }
+
     public void Quit()
     {
         Application.Quit();
     }
-
-    public bool SetSnake(Snake snakeIn)
-    {
-        snake = snakeIn;
-        return deadlyWalls;
-    }
-
-
 }
