@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     bool inputtingName = false;
     int tempScore = 0;
     bool inMenu = true;
+    static int MAXSCORES = 10;
 
     void Awake()
     {
@@ -108,7 +109,7 @@ public class GameManager : MonoBehaviour
 
     private void LoadScores()
     {
-        for (int i = 0; i <= 10; i++)
+        for (int i = 0; i <= MAXSCORES; i++)
         {
             if (PlayerPrefs.HasKey("SavedHighScore"+(char)i))
             {
@@ -131,10 +132,9 @@ public class GameManager : MonoBehaviour
 
         if (scoreClass.Count >= 10)
         {
-            scoreClass.RemoveRange(10,scoreClass.Count-10);
+            scoreClass.RemoveRange(MAXSCORES,scoreClass.Count-MAXSCORES);
         }
         
-        //Save score to playerprefs and set list;
         foreach (var score in scoreClass)
         {
             scoreString += i+1 + ". " + scoreClass[i].scoreValue + " - " + scoreClass[i].scoreName + "\n";
