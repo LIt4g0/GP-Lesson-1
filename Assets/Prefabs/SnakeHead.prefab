@@ -397,20 +397,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1853415d823ba124c8a245d45d3b3512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snakePart: {fileID: 297221365875686920, guid: 03de5a46eea610b4699e228611b43bd3, type: 3}
+  scoreText: {fileID: 0}
   moveTime: 0.2
   stepDist: 1
-  moves: []
-  rotations: []
-  parts:
-  - {fileID: 0}
-  looseParts: []
-  moveDir: 0
-  prevMoveDir: 0
-  snakePart: {fileID: 297221365875686920, guid: 03de5a46eea610b4699e228611b43bd3, type: 3}
-  startParts: 0
-  text: {fileID: 0}
   speedMultiplier: 2
-  gameManager: {fileID: 0}
+  mapSizeX: 12
+  mapSizeZ: 6
   score: 0
 --- !u!65 &5028731913350520292
 BoxCollider:

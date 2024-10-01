@@ -1,31 +1,38 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Snake : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] SnakePart snakePart;
+    [SerializeField] SnakePart snakeTail;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [Header("Movement")]
     [SerializeField] float moveTime = 0.5f;
     [SerializeField] float stepDist = 1.0f;
-    [SerializeField] List<Vector3> moves = new List<Vector3>();
-    [SerializeField] List<float> rotations = new List<float>();
-    [SerializeField] List<SnakePart> parts = new List<SnakePart>();
-    [SerializeField] List<SnakePart> unattachedParts = new List<SnakePart>();
-    [SerializeField] int moveDir = 0;
-    [SerializeField] int prevMoveDir = 0;
-    [SerializeField] SnakePart snakePart;
-    float rotation = 0.0f;
-    float timeToMove = 0.0f;
-    [SerializeField] int startParts = 1;
-    [SerializeField] TextMeshProUGUI text;
     [SerializeField] float speedMultiplier = 2.0f;
+    [Header("Map size")]
     public float mapSizeX = 16;
     public float mapSizeZ = 8;
-    public int score = 0;
+
+    //Local vars
+    Vector3 moveVector = new(0, 0, 0);
+    const int STARTPARTS = 1;
+    int score = 0;
+    int moveDir = 0;
+    int prevMoveDir = 0;
+    float rotation = 0.0f;
+    float timeToMove = 0.0f;
     bool deadlyWalls = true;
+    bool dirChanged = false;
+
+    List<Vector3> moves = new();
+    List<float> rotations = new();
+    List<SnakePart> attachedParts = new();
+    List<SnakePart> unattachedParts = new();
+    List<SnakePart> recentlyAttachedParts = new();
+
 
     void Start()
     {
@@ -33,55 +40,36 @@ public class Snake : MonoBehaviour
         rotations.Add(0);
         moveDir = 4;
         prevMoveDir = moveDir;
+        dirChanged = true;
+        attachedParts.Add(snakeTail);
     }
 
     void Update()
     {
-        InputToMoveDir();
+        SetMoveDir();
 
-        SpeedBoost();
+        MoveTimer();
 
-        if (timeToMove >= moveTime)
+        Move();
+    }
+
+    private void Move()
+    {
+        if (timeToMove < 0)
         {
-            Vector3 moveVector = new Vector3(0, 0, 0);
-            switch (moveDir)
+
+            foreach (SnakePart recentlyAttached in recentlyAttachedParts)
             {
-                case 0:
-                    moveDir = prevMoveDir;
-                    break;
-
-                case 1:
-                    moveVector.z = stepDist;
-                    rotation = -90;
-                    break;
-
-                case 2:
-                    moveVector.z = -stepDist;
-                    rotation = 90;
-                    break;
-
-                case 4:
-                    moveVector.x = stepDist;
-                    rotation = 0;
-                    break;
-
-                case 5:
-                    moveVector.x = -stepDist;
-                    rotation = 180;
-                    break;
-
-                default:
-                    break;
+                unattachedParts.Remove(recentlyAttached);
             }
-            int j = 0;
-            foreach (SnakePart loose in unattachedParts)
+
+            foreach (SnakePart unattached in unattachedParts)
             {
-                loose.AttachCount();
-                j += 1;
+                unattached.AttachCount();
             }
 
             int i = 0;
-            foreach (SnakePart attached in parts)
+            foreach (SnakePart attached in attachedParts)
             {
                 if (moves[i] == null)
                 {
@@ -90,17 +78,16 @@ public class Snake : MonoBehaviour
                 attached.MovePart(moves[i], rotations[i]);
                 i += 1;
             }
-            float sizeX = mapSizeX;
-            float sizeZ = mapSizeZ;
+
             Vector3 tempMove = moveVector + moves[0];
 
-            if ((tempMove.x > sizeX || tempMove.x < -sizeX) && !deadlyWalls)
+            if ((tempMove.x > mapSizeX || tempMove.x < -mapSizeX) && !deadlyWalls)
             {
                 tempMove = moves[0];
                 tempMove.x *= -1;
             }
 
-            if ((tempMove.z > sizeZ || tempMove.z < -sizeZ) && !deadlyWalls)
+            if ((tempMove.z > mapSizeZ || tempMove.z < -mapSizeZ) && !deadlyWalls)
             {
                 tempMove = moves[0];
                 tempMove.z *= -1;
@@ -111,56 +98,93 @@ public class Snake : MonoBehaviour
             transform.position = moves[0];
             transform.localRotation = Quaternion.Euler(0, rotations[0], 0);
 
-            timeToMove = 0.0f;
+            timeToMove = moveTime;
             prevMoveDir = moveDir;
+            dirChanged = false;
 
-            int partsTotal = unattachedParts.Count + parts.Count;
-            
-            if (moves.Count - partsTotal >= 10)
+            int partsTotal = unattachedParts.Count + attachedParts.Count;
+
+            if (moves.Count - partsTotal >= 15)
             {
                 moves.RemoveAt(moves.Count - 1);
                 rotations.RemoveAt(rotations.Count - 1);
             }
         }
-
     }
 
-    private void SpeedBoost()
+    private void MoveTimer()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            timeToMove += Time.deltaTime * speedMultiplier;
+            timeToMove -= Time.deltaTime * speedMultiplier;
         }
         else
         {
-            timeToMove += Time.deltaTime;
+            timeToMove -= Time.deltaTime;
         }
     }
 
-    private void InputToMoveDir()
+    private void SetMoveDir()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
             moveDir = TryMoveDir(1);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S))
         {
             moveDir = TryMoveDir(2);
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D))
         {
             moveDir = TryMoveDir(4);
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A))
         {
             moveDir = TryMoveDir(5);
         }
+
+        if (!dirChanged)
+        {
+            moveDir = prevMoveDir;
+            return;
+        }
+
+        moveVector = Vector3.zero;
+        switch (moveDir)
+        {
+            case 0:
+                break;
+            case 1:
+                rotation = -90;
+                moveVector.z = stepDist;
+                break;
+
+            case 2:
+                rotation = 90;
+                moveVector.z = -stepDist;
+                break;
+
+            case 4:
+                rotation = 0;
+                moveVector.x = stepDist;
+                break;
+
+            case 5:
+                rotation = 180;
+                moveVector.x = -stepDist;
+                break;
+
+            default:
+                break;
+        }
+        transform.localRotation = Quaternion.Euler(0, rotation, 0);
     }
 
     private int TryMoveDir(int moveIn)
     {
         if (Mathf.Abs(moveIn - prevMoveDir)  >= 2)
         {
+            dirChanged = true;
             return moveIn;
         }
         else
@@ -174,22 +198,25 @@ public class Snake : MonoBehaviour
         Invoke(nameof(SpawnPart), moveTime);
         transform.localScale = new Vector3(1.35f,1.35f,1.35f);
         score += 1;
-        text.text = ""+score.ToString("0000");
+        scoreText.text = ""+score.ToString("0000");
     }
 
     public void AttachPart(SnakePart partIn)
     {
-        parts.Insert(0,partIn);
-        unattachedParts.Remove(partIn);
+        attachedParts.Insert(0,partIn);
+        recentlyAttachedParts.Add(partIn);
     }
 
     void SpawnPart()
     {
+        transform.localScale = new Vector3(1,1,1);
+
         SnakePart tempPart = Instantiate(snakePart,moves[1],transform.rotation);
         unattachedParts.Add(tempPart);
-        tempPart.SetStartStuff(startParts, this);
-        startParts += 1;
-        transform.localScale = new Vector3(1f,1f,1f);
+        if (unattachedParts.Count > 0)
+            tempPart.SetStartStuff(attachedParts.Count+unattachedParts.Count-1, this);
+        else
+            tempPart.SetStartStuff(attachedParts.Count-1, this);
     }
 
     void OnTriggerEnter(Collider collision)

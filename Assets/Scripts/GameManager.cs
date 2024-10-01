@@ -4,32 +4,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Score
 {
-    public int scoreValue;
-    public string scoreName;
+    public int value;
+    public string name;
 }
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager manager;
+
     [Header("Refrences")]
     [SerializeField] Canvas menu;
     [SerializeField] Canvas input;
+    [SerializeField] Button play;
     [SerializeField] TMP_InputField inputField;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI tempScoreText;
-    [SerializeField] bool deadlyWalls = true;
-    [SerializeField] List<string> scoreNames = new List<string>();
-    [SerializeField] List<int> scores = new List<int>();
-    [SerializeField] List<Score> scoreClass = new List<Score>();
 
     //Local vars
-    bool inputtingName = false;
+    List<Score> scores = new();
     int tempScore = 0;
+    const int MAXSCORES = 10;
+    const int MAXSCORECHARACTERS = 3;
     bool inMenu = true;
-    static int MAXSCORES = 10;
+    bool deadlyWalls = true;
 
     void Awake()
     {
@@ -46,104 +48,118 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-         if (SceneManager.GetActiveScene().name == "Snake")
-         {
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
             ShowMenu(false);
-         }
-         else
-         {
+        }
+        else
+        {
             ShowMenu(true);
-         }
+        }
 
-         LoadScores();
+        LoadScores();
     }
 
-    void Update()
+    void LoadScores()
     {
-        if (inputtingName)
+        for (int i = 0; i <= MAXSCORES; i++)
         {
-            input.enabled = true;
-            inputField.Select();
+            if (PlayerPrefs.HasKey("SavedHighScore" + (char)i))
+            {
+                Score loadScore = new()
+                {
+                    value = PlayerPrefs.GetInt("SavedHighScore" + (char)i),
+                    name = PlayerPrefs.GetString("ScoreNames" + (char)i)
+                };
+                scores.Insert(i, loadScore);
+            }
         }
+
+        SortAndRefreshScores();
+    }
+
+    public void AddScore(int scoreIn)
+    {
+        tempScore = scoreIn;
+        //Check if score is high enough to make the list
+        if (scores.Count > MAXSCORES - 1 && tempScore <= scores[MAXSCORES - 1].value)
+        {
+            NameInput(false);
+            SetScores();
+        }
+        else
+        {
+            NameInput(true);
+        }
+
+        SceneManager.LoadScene(0);
+        tempScoreText.text = "Your Score: " + tempScore;
     }
 
     public void NameInputFinished()
     {
         if (inputField.text.EndsWith("\n"))
         {
-            string text = inputField.text.Remove(inputField.text.Length - 1);;
+            string inputText = inputField.text.Remove(inputField.text.Length - 1); ;
+            inputText = Regex.Replace(inputText, @"[^a-zA-Z]", "");
             inputField.text = "";
-            text = Regex.Replace(text, @"[^a-zA-Z]", "");
-            if (text.Length < 3)
+            if (inputText.Length < MAXSCORECHARACTERS)
             {
-                Debug.Log("Not enough letters");
-
                 return;
             }
-            inputtingName = false;
-            text = text[..3];
-            text = text.ToUpper();
-            SetScores(tempScore,text);
+            NameInput(false);
+            inputText = inputText[..MAXSCORECHARACTERS];
+            inputText = inputText.ToUpper();
+            SetScores(tempScore, inputText);
             tempScore = 0;
-            Debug.Log(text);
             input.enabled = false;
         }
     }
 
-    private void SetScores(int scoreIn,string nameIn)
+    void NameInput(bool inputOrNot)
     {
-        Debug.Log("Name and score should be set");
+        if (inputOrNot)
+        {
+            input.enabled = true;
+            inputField.Select();
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
+    void SetScores(int scoreIn = 0, string nameIn = "XXX")
+    {
         Score newScore = new()
         {
-            scoreValue = scoreIn,
-            scoreName = nameIn
+            value = scoreIn,
+            name = nameIn
         };
 
-        scoreClass.Add(newScore);
-        Debug.Log("Added player "+ newScore.scoreName + " With score of: "+ newScore.scoreValue);
-        scores.Add(scoreIn);
+        scores.Add(newScore);
         SortAndRefreshScores();
-
         ShowMenu(true);
     }
 
-    private void LoadScores()
-    {
-        for (int i = 0; i <= MAXSCORES; i++)
-        {
-            if (PlayerPrefs.HasKey("SavedHighScore"+(char)i))
-            {
-                Score loadScore = new Score();
-                loadScore.scoreValue = PlayerPrefs.GetInt("SavedHighScore"+(char)i);
-                loadScore.scoreName = PlayerPrefs.GetString("ScoreNames"+(char)i);
-                scoreClass.Insert(i,loadScore);
-            }
-        }
-
-        SortAndRefreshScores();
-    }
 
     void SortAndRefreshScores()
     {
-        string scoreString = "";
-        int i = 0;
-        scoreClass = scoreClass.OrderBy(c => c.scoreValue).ToList();
-        scoreClass.Reverse();
+        scores = scores.OrderBy(c => c.value).ToList();
+        scores.Reverse();
 
-        if (scoreClass.Count >= 10)
+        if (scores.Count >= MAXSCORES)
+            scores.RemoveRange(MAXSCORES, scores.Count - MAXSCORES);
+
+        string tempScoreText = "";
+        for (int i = 0; i < scores.Count; i++)
         {
-            scoreClass.RemoveRange(MAXSCORES,scoreClass.Count-MAXSCORES);
-        }
-        
-        foreach (var score in scoreClass)
-        {
-            scoreString += i+1 + ". " + scoreClass[i].scoreValue + " - " + scoreClass[i].scoreName + "\n";
-            PlayerPrefs.SetInt("SavedHighScore"+(char)i,scoreClass[i].scoreValue);
-            PlayerPrefs.SetString("ScoreNames"+(char)i,scoreClass[i].scoreName);
-            i ++;
+            tempScoreText += i + 1 + ". " + scores[i].value + " - " + scores[i].name + "\n";
+            PlayerPrefs.SetInt("SavedHighScore" + (char)i, scores[i].value);
+            PlayerPrefs.SetString("ScoreNames" + (char)i, scores[i].name);
         }
 
-        scoreText.text = scoreString;
+        scoreText.text = tempScoreText;
     }
 
     void ShowMenu(bool showIn)
@@ -152,34 +168,12 @@ public class GameManager : MonoBehaviour
         if (inMenu)
         {
             menu.enabled = true;
+            play.Select();
         }
         else
         {
             menu.enabled = false;
-        }
-    }
-
-    public void AddScore(int scoreIn)
-    {
-        SceneManager.LoadScene("Menu");
-        tempScore = scoreIn;
-        tempScoreText.text = "Your Score: " + tempScore;
-        
-        if (scoreClass.Count > 9)
-        {
-            if (tempScore <= scoreClass[9].scoreValue)
-            {
-                inputtingName = false;
-                SetScores(0,"XXX");
-            }
-            else
-            {
-                inputtingName = true;
-            }
-        }
-        else
-        {
-            inputtingName = true;
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 
