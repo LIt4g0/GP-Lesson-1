@@ -549,10 +549,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4938052889215517175, guid: 701443754c77e48469c66f660d106d5f, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 6911121722004108510, guid: 701443754c77e48469c66f660d106d5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.79
@@ -593,17 +589,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8268173555063351292, guid: 701443754c77e48469c66f660d106d5f, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 8351678380989943894, guid: 701443754c77e48469c66f660d106d5f, type: 3}
       propertyPath: m_Name
       value: Food (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351678380989943894, guid: 701443754c77e48469c66f660d106d5f, type: 3}
-      propertyPath: m_Layer
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
