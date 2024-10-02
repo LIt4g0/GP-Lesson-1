@@ -1131,6 +1131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4232817886494693662}
   - component: {fileID: 1759647024061193001}
+  - component: {fileID: 3160111723687553536}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1178,6 +1179,24 @@ MonoBehaviour:
   scoreText: {fileID: 6042311107175182626}
   tempScoreText: {fileID: 1544064437606947773}
   deadlyWalls: 1
+--- !u!114 &3160111723687553536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5784438533210918117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ae86e765c965543bcf9751e086e6a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxSourcePrefab: {fileID: 2869990324135763318, guid: be1d285548db4fe4d959689d8093d6e4, type: 3}
+  categories:
+  - name: eat
+    pitchVariation: 1.117
+    clips:
+    - {fileID: 8300000, guid: f0d8ceab7d51a79469e2cb079064126c, type: 3}
 --- !u!1 &6275257366803195887
 GameObject:
   m_ObjectHideFlags: 0

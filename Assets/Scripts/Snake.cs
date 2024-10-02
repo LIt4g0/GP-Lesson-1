@@ -198,6 +198,7 @@ public class Snake : MonoBehaviour
 
     public void AddPart()
     {
+        AudioController.instance.Play("eat");
         Invoke(nameof(SpawnPart), moveTime);
         transform.localScale = new Vector3(1.35f,1.35f,1.35f);
         score += 1;
