@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     const int MAXSCORES = 10;
     const int MAXSCORECHARACTERS = 3;
     bool inMenu = true;
-    bool deadlyWalls = true;
+    public bool deadlyWalls = true;
 
     void Awake()
     {
@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
         }
 
         LoadScores();
+
+        NameInput(false);
     }
 
     void LoadScores()
@@ -120,11 +122,13 @@ public class GameManager : MonoBehaviour
     {
         if (inputOrNot)
         {
+            inputField.enabled = true;
             input.enabled = true;
             inputField.Select();
         }
         else
         {
+            inputField.enabled = false;
             EventSystem.current.SetSelectedGameObject(null);
         }
     }

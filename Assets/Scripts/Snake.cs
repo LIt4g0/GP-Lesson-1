@@ -42,6 +42,7 @@ public class Snake : MonoBehaviour
         prevMoveDir = moveDir;
         dirChanged = true;
         attachedParts.Add(snakeTail);
+        deadlyWalls = GameManager.manager.deadlyWalls;
     }
 
     void Update()

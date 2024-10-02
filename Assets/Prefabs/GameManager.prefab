@@ -352,7 +352,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 260, y: -574}
+  m_AnchoredPosition: {x: 300.8, y: -599.2}
   m_SizeDelta: {x: 366.7897, y: 96.76807}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8810716121712594342
@@ -524,7 +524,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -91.5}
+  m_AnchoredPosition: {x: 0, y: -15}
   m_SizeDelta: {x: 804.4, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6687125098274149240
@@ -658,8 +658,8 @@ RectTransform:
   - {fileID: 5014126100074910775}
   - {fileID: 4240717663061187466}
   - {fileID: 873838085978389676}
-  - {fileID: 9101758640076802622}
   - {fileID: 5129667850780401566}
+  - {fileID: 9101758640076802622}
   m_Father: {fileID: 4232817886494693662}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1198,6 +1198,7 @@ MonoBehaviour:
   inputField: {fileID: 3651743697109322252}
   scoreText: {fileID: 6042311107175182626}
   tempScoreText: {fileID: 1544064437606947773}
+  deadlyWalls: 1
 --- !u!1 &6275257366803195887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,11 +1945,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7197817775855590763, guid: 74e49f59a68e82c428be697e94bb70fb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 202.2
+      value: 243
       objectReference: {fileID: 0}
     - target: {fileID: 7197817775855590763, guid: 74e49f59a68e82c428be697e94bb70fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -314.8
+      value: -340
       objectReference: {fileID: 0}
     - target: {fileID: 7197817775855590763, guid: 74e49f59a68e82c428be697e94bb70fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2070,11 +2071,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7197817775855590763, guid: 74e49f59a68e82c428be697e94bb70fb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 202.2
+      value: 243
       objectReference: {fileID: 0}
     - target: {fileID: 7197817775855590763, guid: 74e49f59a68e82c428be697e94bb70fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -428
+      value: -453.2
       objectReference: {fileID: 0}
     - target: {fileID: 7197817775855590763, guid: 74e49f59a68e82c428be697e94bb70fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
