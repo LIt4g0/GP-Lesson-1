@@ -7,7 +7,7 @@ public class Snake : MonoBehaviour
     [Header("References")]
     [SerializeField] SnakePart snakePart;
     [SerializeField] SnakePart snakeTail;
-    [SerializeField] TextMeshProUGUI scoreText;
+    TextMeshProUGUI scoreText;
     [Header("Movement")]
     [SerializeField] float moveTime = 0.5f;
     [SerializeField] float stepDist = 1.0f;
@@ -43,6 +43,8 @@ public class Snake : MonoBehaviour
         dirChanged = true;
         attachedParts.Add(snakeTail);
         deadlyWalls = GameManager.manager.deadlyWalls;
+        scoreText = GameManager.manager.scoreCanvas.GetComponentInChildren<TextMeshProUGUI>();
+        scoreText.text = ""+score.ToString("0000");
     }
 
     void Update()
@@ -115,7 +117,7 @@ public class Snake : MonoBehaviour
 
     private void MoveTimer()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetButton("Jump"))
         {
             timeToMove -= Time.deltaTime * speedMultiplier;
         }
@@ -127,19 +129,19 @@ public class Snake : MonoBehaviour
 
     private void SetMoveDir()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetAxisRaw("Vertical") > 0)
         {
             moveDir = TryMoveDir(1);
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetAxisRaw("Vertical") < 0)
         {
             moveDir = TryMoveDir(2);
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetAxisRaw("Horizontal") > 0)
         {
             moveDir = TryMoveDir(4);
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetAxisRaw("Horizontal") < 0)
         {
             moveDir = TryMoveDir(5);
         }

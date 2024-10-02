@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("Refrences")]
     [SerializeField] Canvas menu;
     [SerializeField] Canvas input;
+    public Canvas scoreCanvas;
     [SerializeField] Button play;
     [SerializeField] TMP_InputField inputField;
     [SerializeField] TextMeshProUGUI scoreText;
@@ -32,6 +33,9 @@ public class GameManager : MonoBehaviour
     const int MAXSCORECHARACTERS = 3;
     bool inMenu = true;
     public bool deadlyWalls = true;
+    const string DEADLYWON = "wallson";
+    const string DEADLYWOFF = "wallsoff";
+    string wallSetting = DEADLYWON;
 
     void Awake()
     {
@@ -56,22 +60,39 @@ public class GameManager : MonoBehaviour
         {
             ShowMenu(true);
         }
-
+        
         LoadScores();
 
         NameInput(false);
     }
 
-    void LoadScores()
+    public void ClearScores()
     {
+
+
         for (int i = 0; i <= MAXSCORES; i++)
         {
-            if (PlayerPrefs.HasKey("SavedHighScore" + (char)i))
+            if (PlayerPrefs.HasKey("SavedHighScore" + wallSetting + (char)i))
+            {
+                PlayerPrefs.DeleteKey("SavedHighScore" + wallSetting + (char)i);
+                PlayerPrefs.DeleteKey("ScoreNames" + wallSetting + (char)i);
+            }
+        }
+        scores = new();
+        LoadScores();
+    }
+
+    void LoadScores()
+    {
+        scores = new();
+        for (int i = 0; i <= MAXSCORES; i++)
+        {
+            if (PlayerPrefs.HasKey("SavedHighScore" + wallSetting + (char)i))
             {
                 Score loadScore = new()
                 {
-                    value = PlayerPrefs.GetInt("SavedHighScore" + (char)i),
-                    name = PlayerPrefs.GetString("ScoreNames" + (char)i)
+                    value = PlayerPrefs.GetInt("SavedHighScore" + wallSetting + (char)i),
+                    name = PlayerPrefs.GetString("ScoreNames" + wallSetting + (char)i)
                 };
                 scores.Insert(i, loadScore);
             }
@@ -116,6 +137,14 @@ public class GameManager : MonoBehaviour
             tempScore = 0;
             input.enabled = false;
         }
+        else
+        {
+            inputField.text = Regex.Replace(inputField.text, @"[^a-zA-Z]", "");
+            if (inputField.text.Length > MAXSCORECHARACTERS)
+            {
+                inputField.text = inputField.text[..MAXSCORECHARACTERS];
+            }
+        }
     }
 
     void NameInput(bool inputOrNot)
@@ -159,8 +188,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < scores.Count; i++)
         {
             tempScoreText += i + 1 + ". " + scores[i].value + " - " + scores[i].name + "\n";
-            PlayerPrefs.SetInt("SavedHighScore" + (char)i, scores[i].value);
-            PlayerPrefs.SetString("ScoreNames" + (char)i, scores[i].name);
+            PlayerPrefs.SetInt("SavedHighScore" + wallSetting + (char)i, scores[i].value);
+            PlayerPrefs.SetString("ScoreNames" + wallSetting + (char)i, scores[i].name);
         }
 
         scoreText.text = tempScoreText;
@@ -172,18 +201,27 @@ public class GameManager : MonoBehaviour
         if (inMenu)
         {
             menu.enabled = true;
+            scoreCanvas.enabled = false;
             play.Select();
         }
         else
         {
+            scoreCanvas.enabled = true;
             menu.enabled = false;
             EventSystem.current.SetSelectedGameObject(null);
         }
     }
 
-    public void SetWalls()
+    public void ToogleWalls()
     {
         deadlyWalls = !deadlyWalls;
+
+        if (deadlyWalls)
+            wallSetting = DEADLYWON;
+        else
+            wallSetting = DEADLYWOFF;
+
+        LoadScores();
     }
 
     public void Play()
