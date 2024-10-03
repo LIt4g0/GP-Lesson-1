@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Snake : MonoBehaviour
 {
@@ -33,9 +34,29 @@ public class Snake : MonoBehaviour
     List<SnakePart> unattachedParts = new();
     List<SnakePart> recentlyAttachedParts = new();
 
+    float moveHoriInputSys;
+    float moveVertInputSys;
+    bool testInput = false;
+    PlayerControls playerControls;
+
+    void Awake()
+    {
+        playerControls = new();
+    }
+
+    void OnEnable()
+    {
+        playerControls.Enable();
+    }
+
+    void OnDisable()
+    {
+        playerControls.Disable();
+    }
 
     void Start()
     {
+        GetComponent<PlayerInput>();
         moves.Add(transform.position);
         rotations.Add(0);
         moveDir = 4;
@@ -49,6 +70,8 @@ public class Snake : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(playerControls.Snake.Move.ReadValue<Vector2>());
+
         SetMoveDir();
 
         MoveTimer();
