@@ -38,6 +38,7 @@ public class Snake : MonoBehaviour
     float moveVertInputSys;
     bool testInput = false;
     PlayerControls playerControls;
+    Vector2 move;
 
     void Awake()
     {
@@ -70,7 +71,6 @@ public class Snake : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(playerControls.Snake.Move.ReadValue<Vector2>());
 
         SetMoveDir();
 
@@ -140,7 +140,7 @@ public class Snake : MonoBehaviour
 
     private void MoveTimer()
     {
-        if (Input.GetButton("Jump"))
+        if (playerControls.Snake.Jump.ReadValue<float>() == 1)
         {
             timeToMove -= Time.deltaTime * speedMultiplier;
         }
@@ -152,22 +152,41 @@ public class Snake : MonoBehaviour
 
     private void SetMoveDir()
     {
-        if (Input.GetAxisRaw("Vertical") > 0)
+        move = playerControls.Snake.Move.ReadValue<Vector2>();
+        if (move.y > 0)
         {
             moveDir = TryMoveDir(1);
         }
-        else if (Input.GetAxisRaw("Vertical") < 0)
+        else if (move.y < 0)
         {
             moveDir = TryMoveDir(2);
         }
-        else if (Input.GetAxisRaw("Horizontal") > 0)
+        else if (move.x > 0)
         {
             moveDir = TryMoveDir(4);
         }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
+        else if (move.x < 0)
         {
             moveDir = TryMoveDir(5);
         }
+
+
+        // if (Input.GetAxisRaw("Vertical") > 0)
+        // {
+        //     moveDir = TryMoveDir(1);
+        // }
+        // else if (Input.GetAxisRaw("Vertical") < 0)
+        // {
+        //     moveDir = TryMoveDir(2);
+        // }
+        // else if (Input.GetAxisRaw("Horizontal") > 0)
+        // {
+        //     moveDir = TryMoveDir(4);
+        // }
+        // else if (Input.GetAxisRaw("Horizontal") < 0)
+        // {
+        //     moveDir = TryMoveDir(5);
+        // }
 
         if (!dirChanged)
         {

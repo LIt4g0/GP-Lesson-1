@@ -44,15 +44,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Explosion"",
-                    ""type"": ""Button"",
-                    ""id"": ""d2af667b-29a3-4dc5-a94e-4e467b5161e0"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -253,17 +244,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7da9bd54-6d80-41d8-81f5-7315930f49db"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Explosion"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -274,7 +254,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Snake = asset.FindActionMap("Snake", throwIfNotFound: true);
         m_Snake_Move = m_Snake.FindAction("Move", throwIfNotFound: true);
         m_Snake_Jump = m_Snake.FindAction("Jump", throwIfNotFound: true);
-        m_Snake_Explosion = m_Snake.FindAction("Explosion", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -338,14 +317,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<ISnakeActions> m_SnakeActionsCallbackInterfaces = new List<ISnakeActions>();
     private readonly InputAction m_Snake_Move;
     private readonly InputAction m_Snake_Jump;
-    private readonly InputAction m_Snake_Explosion;
     public struct SnakeActions
     {
         private @PlayerControls m_Wrapper;
         public SnakeActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Snake_Move;
         public InputAction @Jump => m_Wrapper.m_Snake_Jump;
-        public InputAction @Explosion => m_Wrapper.m_Snake_Explosion;
         public InputActionMap Get() { return m_Wrapper.m_Snake; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -361,9 +338,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @Explosion.started += instance.OnExplosion;
-            @Explosion.performed += instance.OnExplosion;
-            @Explosion.canceled += instance.OnExplosion;
         }
 
         private void UnregisterCallbacks(ISnakeActions instance)
@@ -374,9 +348,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @Explosion.started -= instance.OnExplosion;
-            @Explosion.performed -= instance.OnExplosion;
-            @Explosion.canceled -= instance.OnExplosion;
         }
 
         public void RemoveCallbacks(ISnakeActions instance)
@@ -398,6 +369,5 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnExplosion(InputAction.CallbackContext context);
     }
 }
