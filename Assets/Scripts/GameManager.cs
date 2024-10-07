@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     const string DEADLYWON = "wallson";
     const string DEADLYWOFF = "wallsoff";
     string wallSetting = DEADLYWON;
+    Animator animator;
 
     void Awake()
     {
@@ -52,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+        //animator.Play("LoadMenu");
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             ShowMenu(false);
@@ -99,6 +102,7 @@ public class GameManager : MonoBehaviour
         }
 
         SortAndRefreshScores();
+        //animator.Play("LoadMenu");
     }
 
     public void AddScore(int scoreIn)
@@ -193,6 +197,7 @@ public class GameManager : MonoBehaviour
         }
 
         scoreText.text = tempScoreText;
+        animator.SetTrigger("Load");
     }
 
     void ShowMenu(bool showIn)
